@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> <META HTTP-EQUIV="Expires" CONTENT="-1">  -->
+    <meta name="google-signin-client_id"
+        content="995223720720-6vbvj9bbht4e1c5p4jba538kgb6irjhp.apps.googleusercontent.com">
+    <!-- <link type="text/css" rel="stylesheet" href="assets/materialize/css/materialize.min.css"
+        media="screen,projection" /> -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"/>
+
+    <script>
+        //Funciones de validación de campos del formulario
+        function continuar(){
+            $(document).ready(function(){
+                $("#divInicio").show();
+                $("#bienvenido").hide();
+            })
+        }
+        
+        function comprobarPh(){
+            var ph = document.getElementById('ph').value;     
+            if(ph > 14){
+                alert("El valor de PH se encuentra fuera de rango");
+                document.getElementById('ph').value='14';
+            }else if(ph < 0.01){
+                alert("El valor de PH se encuentra fuera de rango")
+                document.getElementById('ph').value='0.01';
+            }    
+        }
+      
+        function comprobarTemp(){
+            var temperatura = document.getElementById('temperatura').value;
+            if(temperatura > 40){
+                alert("El valor de temperatura se encuentra fuera de rango");
+                document.getElementById('temperatura').value='40';
+            }
+        }
+        function comprobarOd(){
+            var od = document.getElementById('od').value;   
+            if(od < 0.05){
+                alert("El valor de OD se encuentra fuera de rango");
+                document.getElementById('od').value='0.05';
+            }
+        }
+        function comprobarCE(){
+            var conductividad_electrica = document.getElementById('conductividad_electrica').value;
+            if(conductividad_electrica < 0.05){
+                alert("El valor de conductividad Electrica se encuentra fuera de rango");
+                document.getElementById('conductividad_electrica').value='0.05';
+            }
+        }
+        function comprobarTurb(){
+            var turbiedad = document.getElementById('turbiedad').value;
+            if(turbiedad < 0.05){
+                alert("El valor de Turbiedad se encuentra fuera de rango");
+                document.getElementById('turbiedad').value='0.05';
+            }
+        }
+        function comprobarSoliSus(){
+            var solidos_suspendidos = document.getElementById('solidos_suspendidos').value;
+            if(solidos_suspendidos < 1){
+                alert("El valor de Solidos Suspendidos se encuentra fuera de rango");
+                document.getElementById('solidos_suspendidos').value='1';
+            }
+        }
+        function comprobarSoliDisu(){
+            var solidos_disueltos = document.getElementById('solidos_disueltos').value;
+            if(solidos_disueltos < 1){
+                alert("El valor de Solidos Disueltos se encuentra fuera de rango");
+                document.getElementById('solidos_disueltos').value='1';
+            }
+        }
+        function comprobarDure(){
+            var durez_total = document.getElementById('durez_total').value;
+            if(durez_total < 0.05){
+                alert("El valor de Durez Total se encuentra fuera de rango");
+                document.getElementById('durez_total').value='0.05';
+            }
+        }
+        function comprobarAlca(){
+            var alcalinidad = document.getElementById('alcalinidad').value;
+            if(alcalinidad < 0.05){
+                alert("El valor de Alcalinidad se encuentra fuera de rango");
+                document.getElementById('alcalinidad').value='0.05';
+            }
+        }
+        function comprobarNitra(){
+            var nitrato = document.getElementById('nitrato').value;
+            if(nitrato < 0.1){
+                alert("El valor de Nitrato se encuentra fuera de rango");
+                document.getElementById('nitrato').value='0.1';
+            }
+        }
+        function comprobarFosf(){
+            var po4 = document.getElementById('po4').value;
+            if(po4 < 0.05){
+                alert("El valor de PO4 se encuentra fuera de rango");
+                document.getElementById('po4').value='0.05';
+            }
+        }
+
+        function LoadOnce() { 
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });  
+        }
+
+        
+
+    </script>
+
+    <!-- android --> 
+    <!-- <meta name="theme_color" content="#3498db"> -->
+    <title>Total Data Capture</title>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-wrapper logo-nav-container"> <!--nav-wrapper  class="animated infinite tada"  -->
+            <div class="title">
+                <div>
+                    <h1 id="unisangil"   >Total Data Capture</h1>
+                    <h1 id="connect-mode"  class="animated infinite headShake"></h1>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <!-- Imagen de inicio -->
+        <div class="campoImag" id="campoImag"><img src="icons/campo.jpg" alt="" srcset=""></div>
+        <!-- Zona de bienvenido -->
+        <div id="bienvenido" class="bienvenido animated slideInUp">
+            <P>
+                <p></p><img src="icons/icon.png"  class="animated infinite pulse"></p>
+                    <p><span>BIENVENIDO A Q-WATER</span></p>
+               <p> &mdash; Q-Water permite el registro de datos para el cálculo del indice de calidad del agua (ICA). &mdash;</p>
+                <p><a class="btnContinuar" onclick="continuar()">CONTINUAR</a></p>
+            </P>   
+        </div>
+
+        <!-- Zona para inicio de Sesion -->
+        <div id="divInicio" class="divInicio animated zoomInUp">
+            <div class="formIni">
+                <a href="#" class="brand-logo">
+                    <img src="icons/icon.png" class="animated infinite pulse">
+                </a>
+                <h3 style="color: black;">Inicio de sesión</h3>
+                <div>
+                    <div enctype="multipart/form-data" id="forminiciarSeccion" name="iniciarSeccion">
+                        <!-- <label>Email:</label> -->
+                        <input type="text" id="email" placeholder="Ingresa usuario" required>
+                        <!-- <label>Password: </label> -->
+                        <input type="password" id="password" placeholder="Ingrese password" required>
+                        <button type="submit" id="submit" name="" value="Inicio Sesion" >login</button>
+                        <!-- <input type="submit" name="" value="Inicio Sesion"> -->
+                    </div>
+                </div> 
+            </div>     
+        </div> 
+
+        <!-- zona de formulario -->
+        <div id="divformulario" class="divformulario animated zoomInRight">
+            <div class="headerFormulario">
+                <div class="sigOut">
+                    <form id="sigOut">
+                        <button type="submit" id="btnSingOunt" class="signOut" value="Sign Out" name="" onLoad=" LoadOnce()"> Sign Out</button>
+                    </form>
+                </div>
+                <div class="downloadReport">
+                    <form id="downloadReport">
+                        <div>
+                            <button type="submit" id="downloadReports" name="" value="Descargar Datos" style="color: black; background: #9997f0;">
+                                <span class="material-icons">
+                                    move_to_inbox
+                                </span>
+                            </button>   
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="container">   
+                <div class="form-container">
+                    <h3><span class="material-icons" id="admini">
+                        engineering
+                    </span>
+                    <span class="material-icons" id="campo">
+                        streetview
+                    </span>
+                    Formulario ICA</h3>
+                    <img src="icons/form.png">
+                    <div id="fecha" style="color: black; font-size: 18px;"></div>  
+                    <div class="form" >
+                        <div class="input-field col s6" style="display: none;">
+                            <label for="userEditor">Usuario Editor</label>
+                            <textarea name="userEditor" class="materialize-textarea" id="userEditor"></textarea>
+                        </div>
+                        <div class="row section-form">
+                            <div style="display:none;" class="col s6" >
+                                <div id="margenError"></div> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div id="userToma" class="userToma"></div>  
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div>
+                                <select id="nombrePunto" name="nombrePunto" class="form-control">
+                                    <option>Punto de muestreo existentes</option>
+                                </select>
+                            </div>
+                        </div> 
+                        <form enctype="multipart/form-data" class="ica col s12" id="ica" name="ica"> 
+                            <div class="row section-form">
+                                <h3>Nuevo Punto de muestreo</h3>
+                                <div class="input-field col s12">
+                                    <!-- <label for="comentarios">Punto de muestreo</label> -->
+                                    <textarea name="comentarios" id="comentarios" placeholder="* Punto de muestreo" required></textarea>
+                                </div>
+                            </div>
+                            <div class="row section-form">
+                                <h3>Ubicación</h3>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <!-- <label for="lat">Latitud</label>   -->
+                                        <input type="text" id="lat" name="lat" class="lat" id="lat" placeholder="* Latitud" required/>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <!-- <label for="long">Longitud</label> -->
+                                        <input id="long" name="long" type="text" class="long" id="long" placeholder="* Longitud" required>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <!-- <label for="desPunto">Descripción de punto</label> -->
+                                        <textarea name="desPunto" id="desPunto" placeholder="* Descripción de punto" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row section-form" style="padding: 6px;">
+                                <h3>Parámetros</h3>
+                                <div class="row">
+                                    <div  class="input-field col s6">
+                                        <input type="text" id="ph" name="ph" class="ph" onblur="comprobarPh()" placeholder=" * Ph" required/>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <!-- <label for="temperatura">Temp [°C]</label> -->
+                                        <input id="temperatura" name="temperatura" type="text" class="validate" onblur="comprobarTemp()" placeholder="Temp [°C]">
+                                    </div>
+                                </div>
+                                <div class="row">                                
+                                    <div class="input-field col s6">
+                                        <!-- <label for="od">OD (mg/L)</label> -->
+                                        <input id="od" name="od" type="text" class="validate" onblur="comprobarOd()" placeholder="OD (mg/L)">
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <!-- <label for="conductividad_electrica">Cond. Eléctrica (µS/cm)</label> -->
+                                        <input id="conductividad_electrica" name="conductividad_electrica" type="text" class="validate" onblur="comprobarCE()" placeholder="Cond. Eléctrica (µS/cm)">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <!-- <label for="turbiedad">Turbiedad (NTU)</label> -->
+                                        <input id="turbiedad" name="turbiedad" type="text" class="validate" onblur="comprobarTurb()" placeholder="Turbiedad (NTU)">
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <!-- <label for="color">Color(UPC)</label> -->
+                                        <input id="color" name="color" type="text" class="validate" placeholder="Color(UPC)">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <button type="button" id="mostrarMas" name="" class="btn btn-primary btn-block btn-large" value="Mostrar más variables" style="color: black;">Más Parámetros<span class="material-icons">arrow_drop_down</span></button>
+                                        <button type="button" id="mostrarMenos" name="" class="btn btn-primary btn-block btn-large" value="Ver menos" style="color: black;">Menos Parámetros<span class="material-icons">arrow_drop_up</span></button>
+                                    </div>
+                            </div>                      
+                                <!-- Datos que no son mostrados en pantalla para el usuario. -->
+                                <div id="formulario" style="display: none;" >
+                                    <div class="row">                             
+                                        <div class="input-field col s6">
+                                            <!-- <label for="solidos_suspendidos">Sólid. Suspendidos (mg/l)</label> -->
+                                            <input id="solidos_suspendidos" name="solidos_suspendidos" type="text" class="validate" onblur="comprobarSoliSus()" placeholder="Sólid. Suspendidos (mg/l)">
+                                         </div>
+                                        <div class="input-field col s6">
+                                            <!-- <label for="solidos_disueltos">Sólid. Disueltos</label> -->
+                                            <input id="solidos_disueltos" name="solidos_disueltos" type="text" class="validate" onblur="comprobarSoliDisu()" placeholder="Sólid. Disueltos">
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <!-- <label for="durez_total">Durez Total</label> -->
+                                            <input id="durez_total" name="durez_total" type="text" class="validate" onblur="comprobarDure()" placeholder="Durez Total">
+                                       </div>
+                                        <div class="input-field col s6">
+                                            <!-- <label for="cloruros">Cloruros</label> -->
+                                            <input id="cloruros" name="cloruros" type="text" class="validate" placeholder="Cloruros">
+                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <!-- <label for="alcalinidad">Alcalinidad</label> -->
+                                            <input id="alcalinidad" name="alcalinidad" type="text" class="validate" onblur="comprobarAlca()" placeholder="Alcalinidad">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <!-- <label for="grasas_y_aceites">Grasas y Aceites</label> -->
+                                            <input id="grasas_y_aceites" name="grasas_y_aceites" type="text" class="validate" placeholder="Grasas y Aceites">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <!-- <label for="nitrato"> NO3 (l)</label> -->
+                                            <input id="nitrato" name="nitrato" type="text" class="validate" onblur="comprobarNitra()" placeholder=" NO3 (l)">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <!-- <label for="po4">PO4</label> -->
+                                            <input id="po4" name="po4" type="text" class="validate" onblur="comprobarFosf()" placeholder="PO4">
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s6">
+                                            <!-- <label for="amoniaco"> NO2 (l)</label> -->
+                                            <input id="amoniaco" name="amoniaco" type="text" class="validate" placeholder="NO2 (l)">
+                                        </div>
+                                        <div class="input-field col s6">
+                                            <!-- <label for="saam">SAAM</label> -->
+                                            <input id="saam" name="saam" type="text" class="validate" placeholder="SAAM">
+                                       </div>
+                                    </div>
+
+                                    <!-- Datos que solo son mostrados en el dashboard -->
+                                    <div style="display: none;">
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <label for="dbo5">DBO (mg/l)</label>
+                                                <input id="dbo5" name="dbo5" type="text" class="validate">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="input-field col s6">
+                                                <label for="coliformes_fecales">Coliformes Fecales (UFC/100 ml)</label>
+                                                <input id="coliformes_fecales" name="coliformes_fecales" type="text" class="validate">
+                                           </div>
+                                            <div class="input-field col s6">
+                                                <label for="coliformes_totales">Coliformes Totales (UFC/100 ml)</label>
+                                                <input id="coliformes_totales" name="coliformes_totales" type="text" class="validate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                              
+                            </div>
+                            <div class="row section-form">
+                                <h3>Observaciones de toma</h3>
+                                <div class="input-field col s12">
+                                    <!-- <label for="observaciones">Observaciones</label> -->
+                                   <textarea name="observaciones" id="observaciones" placeholder="* Observaciones" required ></textarea>
+                                </div>
+                            </div>
+                            <!-- Esta parte se visualiza en el dashboard -->
+                            <div id="observaLabo" class="row section-form">
+                                <div class="input-field col s12">
+                                    <label for="ObservaLabo"></label>
+                                    <textarea name="ObservaLabo" id="ObservaLabo"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- <button type="submit" id="send-div" >Enviar</button> -->
+                    <input id="send-div" class="submit" type="submit" value="Enviar">
+                    <!-- <div id="send-div" class="send-div btn-warning add_to_cart" name="add_to_cart">Enviar</div> -->
+                    <!-- <form enctype="multipart/form-data" class="col s12" id="forminiciarSeccion" name="iniciarSeccion"></form> -->
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- <div id="send-div" style="display:none;"></div>
+    <form id="downloadReport" style="display:none;"><button type="submit" id="downloadReport"><button></form> -->
+    <script type="text/javascript" src="assets/materialize/js/materialize.min.js"></script> 
+    <script type="text/javascript" src="dist/bundle.js"></script>
+</body>
+</html>

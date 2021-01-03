@@ -1,0 +1,16 @@
+{
+  "rules": { 
+    "users":{
+			"$user_id":{
+        ".read":"auth != null",
+        ".write": true
+      }
+    },
+      ".read":true,
+      "monitoreo1":{
+				"$user_id":{
+          ".write":"auth != null"
+        	}
+        }
+  }
+}
